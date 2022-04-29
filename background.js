@@ -5,6 +5,7 @@
 // This should never have a length other than 2
 let websitePair = ["com", "co.uk"];
 // Array with all known top-level domains for Amazon (www.amazon.???)
+// TODO: make into objects with a string of the country ("US", "India", etc.)
 let allTlds = [
   "com",
   "com.au",

@@ -1,7 +1,7 @@
 /* Styles for extension options menu popup */
 
 body {
-  min-width: 225px;
+  min-width: 275px;
 }
 
 .div-button {
@@ -10,6 +10,7 @@ body {
 }
 
 button {
+  min-width: 250px;
   font-size: 16px;
   background-color: lightseagreen;
   outline: none;
@@ -29,7 +30,7 @@ label {
 }
 
 select {
-  min-width: 75px;
+  min-width: 100px;
   font-size: 16px;
   padding: 5px;
 }
