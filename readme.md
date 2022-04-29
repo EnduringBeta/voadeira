@@ -1,8 +1,21 @@
 # Voadeira - Chrome Extension
 
-A friend expressed a desire to be able to easily switch from one Amazon site to another (`amazon.co.uk` -> `amazon.com`, for example), while being able to keep looking at the same product or at least search for that product on the other domain.
+A friend expressed a desire to be able to easily switch from one Amazon site to another
+(`amazon.com` -> `amazon.co.uk`, for example), while being able to keep looking at the
+same product or at least search for that product on the other domain. Amazon lets you
+do this by clicking the flag icon at the top, but it's slower and seems to be intended
+as a more permanent change.
 
-This extension, named after [a speedboat used on the Amazon River](https://en.wikipedia.org/wiki/Voadeira), is an attempt at this.
+This extension hopefully makes that a little easier. The user simply selects 2 TLDs
+they'd like to be able to switch between, and then on any Amazon site, the button will
+enable in the extension popup (top right) and allow them to swap to the other nation's
+site to look at the product or search for it.
+
+It is not super reliable, and I'm sure there are many details on Amazon's storefront and
+tech stack that I don't know about that might thwart this in different ways. Oh well!
+This is what I could do.
+
+This extension is named after [a speedboat used on the Amazon River](https://en.wikipedia.org/wiki/Voadeira).
 
 # Examples
 
