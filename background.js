@@ -1,35 +1,36 @@
 // background.js
 // Initializing JS code for this Chrome extension
 
-// Boolean for whether extension operates
-let replace = true;
-
-// Initial words to search page contents for and replace
-let wordPairs = [
-  {
-  	"search": "bombast",
-  	"replace": "bomblast"
-  },
-  {
-  	"search": "Bombast",
-  	"replace": "Bomblast"
-  },
+// Initial array with Amazon extensions to swap between
+// This should never have a length other than 2
+let websitePair = ["com", "co.uk"];
+// Array with all known top-level domains for Amazon (www.amazon.???)
+let allTlds = [
+  "com",
+  "com.au",
+  "com.br",
+  "ca",
+  "cn",
+  "eg",
+  "fr",
+  "de",
+  "in",
+  "it",
+  "co.jp",
+  "mx",
+  "nl",
+  "pl",
+  "sa",
+  "sg",
+  "es",
+  "se",
+  "com.tr",
+  "ae",
+  "co.uk"
 ];
-
-// Initial wobsites where this extension will be active
-// Note: moved to manifest.json, staticly defined
-/*
-let websites = [
-  "https://www.polygon.com/",
-  "https://kotaku.com/",
-];
-*/
 
 // https://developer.chrome.com/docs/extensions/mv3/getstarted/#background-script
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ replace });
-  chrome.storage.sync.set({ wordPairs });
-  //chrome.storage.sync.set({ websites });
-  //console.log("Loaded word replacement pairs");
-  //console.log("Loaded word replacement websites: " + websites.join(", "));
+  chrome.storage.sync.set({ websitePair });
+  chrome.storage.sync.set({ allTlds });
 });

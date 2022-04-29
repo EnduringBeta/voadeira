@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="options-popup.css">
   </head>
   <body>
-    <!-- TODO: add word pair editor and website list editor -->
-    <button id="button-toggle" class="active">🛑 Stop It</button>
+    <div class="div-button">
+      <button id="button-switch">⛵ Switch...</button>
+    </div>
+    <div class="div-select">
+      <label for="select-first-site">First domain:</label>
+      <select id="select-first-site"></select>
+    </div>
+    <div class="div-select">
+      <label for="select-second-site">Second domain:</label>
+      <select id="select-second-site"></select>
+    </div>
     <script src="options-popup.js"></script>
   </body>
 </html>
