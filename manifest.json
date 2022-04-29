@@ -29,7 +29,7 @@
         "*://*.amazon.se/*",
         "*://*.amazon.com.tr/*",
         "*://*.amazon.ae/*",
-        "*://*.amazon.co.uk/*",
+        "*://*.amazon.co.uk/*"
       ],
       "js": ["content-script.js"]
     }
