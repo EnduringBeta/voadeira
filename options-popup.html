@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="div-button">
-      <button id="button-switch">⛵ Switch...</button>
+      <button id="button-switch">⛵Switch...</button>
     </div>
     <div class="div-select">
       <label for="select-first-site">First domain:</label>
@@ -16,6 +16,12 @@
       <label for="select-second-site">Second domain:</label>
       <select id="select-second-site"></select>
     </div>
+    <p id="info">
+      The above button will open a new tab to whichever selected domain
+      isn't the one of this page, so it works in both directions. If the
+      domains selected don't include the page you're on, the button will
+      open a new tab in the second domain.
+    </p>
     <script src="options-popup.js"></script>
   </body>
 </html>

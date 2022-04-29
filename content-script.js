@@ -8,9 +8,7 @@ chrome.storage.sync.get(["websitePair"],
       return;
     }
 
-    console.log(storageObjects.websitePair[0] + " <-> " + storageObjects.websitePair[1]);
-
-    // TODO: get path and/or product name
-    console.log(document.URL);
+    console.log("Voadeira website pair on page load (can change by clicking the extension icon): "
+      + storageObjects.websitePair[0] + " <-> " + storageObjects.websitePair[1]);
   }
 );

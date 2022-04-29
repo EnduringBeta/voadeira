@@ -5,29 +5,28 @@
 // This should never have a length other than 2
 let websitePair = ["com", "co.uk"];
 // Array with all known top-level domains for Amazon (www.amazon.???)
-// TODO: make into objects with a string of the country ("US", "India", etc.)
+// and their respective country names
 let allTlds = [
-  "com",
-  "com.au",
-  "com.br",
-  "ca",
-  "cn",
-  "eg",
-  "fr",
-  "de",
-  "in",
-  "it",
-  "co.jp",
-  "mx",
-  "nl",
-  "pl",
-  "sa",
-  "sg",
-  "es",
-  "se",
-  "com.tr",
-  "ae",
-  "co.uk"
+  {"tld": "com", "nation": "USA"},
+  {"tld": "com.br", "nation": "Brazil"},
+  {"tld": "ca", "nation": "Canada"},
+  {"tld": "cn", "nation": "China"},
+  {"tld": "eg", "nation": "Egypt"},
+  {"tld": "fr", "nation": "France"},
+  {"tld": "de", "nation": "Germany"},
+  {"tld": "in", "nation": "India"},
+  {"tld": "it", "nation": "Italy"},
+  {"tld": "co.jp", "nation": "Japan"},
+  {"tld": "mx", "nation": "Mexico"},
+  {"tld": "nl", "nation": "Netherlands"},
+  {"tld": "pl", "nation": "Poland"},
+  {"tld": "sa", "nation": "Saudi Arabia"},
+  {"tld": "sg", "nation": "Singapore"},
+  {"tld": "es", "nation": "Spain"},
+  {"tld": "se", "nation": "Sweden"},
+  {"tld": "com.tr", "nation": "Turkey"},
+  {"tld": "ae", "nation": "UAE"},
+  {"tld": "co.uk", "nation": "UK"}
 ];
 
 // https://developer.chrome.com/docs/extensions/mv3/getstarted/#background-script

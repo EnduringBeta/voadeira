@@ -1,6 +1,6 @@
 // JS code for extension options menu popup
 
-const switchText = "⛵ Switch to amazon.";
+const switchText = "⛵Switch to amazon.";
 const urlStem = "https://amazon.";
 
 const switchButton = document.getElementById("button-switch");
@@ -9,6 +9,8 @@ const selectTwo = document.getElementById("select-second-site");
 
 const tlds = [];
 const pair = [];
+
+let switchUrl = "";
 
 chrome.storage.sync.get(["websitePair", "allTlds"], (storageObjects) => {
   tlds.push(...storageObjects.allTlds);
@@ -25,7 +27,25 @@ selectTwo.addEventListener("change", onSelectChange);
 
 // Update switch button text
 function updateSwitchButton() {
-  switchButton.innerText = switchText + pair[0];
+  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    if (tabs.length < 1) {
+      console.error("Couldn't find current tab!");
+      return null;
+    }
+    const currentUrl = new URL(tabs[0].url);
+    console.log(currentUrl);
+
+    if (currentUrl.hostname.includes(pair[0])) {
+      switchUrl = urlStem + pair[1] + currentUrl.pathname; // TODO: add search
+      switchButton.innerText = switchText + pair[1];
+    } else if (currentUrl.hostname.includes(pair[1])) {
+      switchUrl = urlStem + pair[0] + currentUrl.pathname;
+      switchButton.innerText = switchText + pair[0];
+    } else {
+      switchUrl = urlStem + pair[1] + currentUrl.pathname;
+      switchButton.innerText = switchText + pair[1];
+    }
+  });
 }
 
 // Refresh options in [selectEl], marking selected option and removing
@@ -45,12 +65,12 @@ function updateSelect(selectEl) {
   // Otherwise add it.
   tlds.forEach(tld => {
     const option = document.createElement("option");
-    option.value = tld;
-    option.innerText = tld;
-    if (tld === pair[curPairIndex]) {
+    option.value = tld.tld;
+    option.innerText = `${tld.nation} (.${tld.tld})`;
+    if (tld.tld === pair[curPairIndex]) {
       option.setAttribute("selected", "");
       selectEl.appendChild(option);
-    } else if (tld !== pair[otherPairIndex]) {
+    } else if (tld.tld !== pair[otherPairIndex]) {
       selectEl.appendChild(option);
     }
   });
@@ -83,10 +103,9 @@ function getSelectIndex(selectEl, other = false) {
   }
 }
 
-// Open new tab at target website.
-// TODO: detect current site and use opposite pair if match, otherwise pair[1]
+// Open new tab at target website (set in updateSwitchButton).
 function onSwitch(event) {
-  window.open(urlStem + pair[1] + "/test", '_blank');
+  window.open(switchUrl, '_blank');
 }
 
 // Update [pair], save data, update button, and update other select element.
