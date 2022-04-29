@@ -1,6 +1,7 @@
 // JS code for running automatically on particular sites
 // as defined in manifest.json
 
+/*
 chrome.storage.sync.get(["websitePair"],
   (storageObjects) => {
     if (storageObjects.websitePair.length !== 2) {
@@ -12,3 +13,4 @@ chrome.storage.sync.get(["websitePair"],
       + storageObjects.websitePair[0] + " <-> " + storageObjects.websitePair[1]);
   }
 );
+*/
