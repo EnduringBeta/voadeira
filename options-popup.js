@@ -1,7 +1,10 @@
 // JS code for extension options menu popup
 
 const switchText = "⛵Switch to amazon.";
+const amazonSig = "amazon";
 const urlStem = "https://amazon.";
+const searchStem = "/s?k=";
+const errorQuery = "a[href='/ref=cs_404_link']";
 
 const switchButton = document.getElementById("button-switch");
 const selectOne = document.getElementById("select-first-site");
@@ -10,20 +13,26 @@ const selectTwo = document.getElementById("select-second-site");
 const tlds = [];
 const pair = [];
 
+let currentUrl = null;
 let switchUrl = "";
+let xhttp = null;
 
-chrome.storage.sync.get(["websitePair", "allTlds"], (storageObjects) => {
-  tlds.push(...storageObjects.allTlds);
-  pair.push(...storageObjects.websitePair);
+init();
 
-  updateSwitchButton();
-  updateSelect(selectOne);
-  updateSelect(selectTwo);
-});
-
-switchButton.addEventListener("click", onSwitch);
-selectOne.addEventListener("change", onSelectChange);
-selectTwo.addEventListener("change", onSelectChange);
+function init() {
+  chrome.storage.sync.get(["websitePair", "allTlds"], (storageObjects) => {
+    tlds.push(...storageObjects.allTlds);
+    pair.push(...storageObjects.websitePair);
+  
+    updateSwitchButton();
+    updateSelect(selectOne);
+    updateSelect(selectTwo);
+  });
+  
+  switchButton.addEventListener("click", onSwitch);
+  selectOne.addEventListener("change", onSelectChange);
+  selectTwo.addEventListener("change", onSelectChange);
+}
 
 // Update switch button text
 function updateSwitchButton() {
@@ -32,20 +41,80 @@ function updateSwitchButton() {
       console.error("Couldn't find current tab!");
       return null;
     }
-    const currentUrl = new URL(tabs[0].url);
-    console.log(currentUrl);
+    currentUrl = new URL(tabs[0].url);
+
+    if (!currentUrl.hostname.includes(amazonSig)) {
+      console.log("Not on an Amazon site, so not enabling button");
+      return;
+    }
 
     if (currentUrl.hostname.includes(pair[0])) {
-      switchUrl = urlStem + pair[1] + currentUrl.pathname; // TODO: add search
+      switchUrl = new URL(urlStem + pair[1] + currentUrl.pathname + currentUrl.search);
       switchButton.innerText = switchText + pair[1];
     } else if (currentUrl.hostname.includes(pair[1])) {
-      switchUrl = urlStem + pair[0] + currentUrl.pathname;
+      switchUrl = new URL(urlStem + pair[0] + currentUrl.pathname + currentUrl.search);
       switchButton.innerText = switchText + pair[0];
     } else {
-      switchUrl = urlStem + pair[1] + currentUrl.pathname;
+      switchUrl = new URL(urlStem + pair[1] + currentUrl.pathname + currentUrl.search);
       switchButton.innerText = switchText + pair[1];
     }
+
+    // Change switchUrl to search if resulting page is a 404 or possibly
+    // another issue
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = handleSwitchUrlCheck;
+    xhttp.open("GET", currentUrl);
+    xhttp.send();
   });
+}
+
+function enableSwitchButton() {
+  switchButton.removeAttribute("disabled");
+}
+
+// If request sent in updateSwitchButton returns badly, change URL to search
+// for the product on the page (based on URL name) rather than send user to
+// bad page.
+function handleSwitchUrlCheck() {
+  if (xhttp.readyState !== XMLHttpRequest.DONE) {
+    return;
+  }
+
+  let shouldChange = false;
+
+  // If target page is bad in any way, change it
+  if (xhttp.status !== 200) {
+    shouldChange = true;
+  } else if (xhttp.responseType === "document"
+    && xhttp.response.querySelector(errorQuery) !== null) {
+    shouldChange = true;
+  } else if (xhttp.responseType === "" || xhttp.responseType === "text") {
+    const parser = new DOMParser();
+    const html = parser.parseFromString(xhttp.response, "text/html");
+    if (html.querySelector(errorQuery) !== null) {
+      shouldChange = true;
+    }
+  }
+  
+  if (shouldChange) {
+    const splitPath = currentUrl.pathname.split("/");
+    while (splitPath.length > 0 && splitPath[0].length < 1) {
+      splitPath.shift();
+    }
+    if (splitPath.length < 1) {
+      console.warn("Switch target path is empty, so nothing to search for");
+      switchUrl = new URL(switchUrl.origin);
+      return;
+    }
+
+    const searchTerms = splitPath[0].replaceAll("-", "+");
+    switchUrl = new URL(switchUrl.origin + searchStem + searchTerms);
+    console.log("Changed switch target to a search of the product name "
+      + "because it didn't return a useful page:");
+    console.log(switchUrl);
+  }
+
+  enableSwitchButton();
 }
 
 // Refresh options in [selectEl], marking selected option and removing
@@ -104,8 +173,8 @@ function getSelectIndex(selectEl, other = false) {
 }
 
 // Open new tab at target website (set in updateSwitchButton).
-function onSwitch(event) {
-  window.open(switchUrl, '_blank');
+function onSwitch() {
+  window.open(switchUrl.href, '_blank');
 }
 
 // Update [pair], save data, update button, and update other select element.
