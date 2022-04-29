@@ -1,0 +1,20 @@
+/* Styles for extension options menu popup */
+
+button {
+  min-width: 150px;
+  font-size: 16px;
+  background-color: lightgreen;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+button.current {
+  box-shadow: 0 0 0 2px white,
+              0 0 0 4px black;
+}
+
+button.active {
+  background-color: palevioletred;
+}
